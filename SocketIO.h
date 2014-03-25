@@ -1,6 +1,6 @@
 //
 //  SocketIO.h
-//  v0.5.1
+//  v0.4.1 ARC
 //
 //  based on 
 //  socketio-cocoa https://github.com/fpotter/socketio-cocoa
@@ -8,14 +8,17 @@
 //
 //  using
 //  https://github.com/square/SocketRocket
+//  https://github.com/stig/json-framework/
 //
 //  reusing some parts of
 //  /socket.io/socket.io.js
 //
 //  Created by Philipp Kyeck http://beta-interactive.de
 //
-//  With help from
-//    https://github.com/pkyeck/socket.IO-objc/blob/master/CONTRIBUTORS.md
+//  Updated by 
+//    samlown   https://github.com/samlown
+//    kayleg    https://github.com/kayleg
+//    taiyangc  https://github.com/taiyangc
 //
 
 #import <Foundation/Foundation.h>
@@ -36,8 +39,7 @@ typedef enum {
     SocketIOWebSocketClosed = -4,
     SocketIOTransportsNotSupported = -5,
     SocketIOHandshakeFailed = -6,
-    SocketIODataCouldNotBeSend = -7,
-    SocketIOUnauthorized = -8
+    SocketIODataCouldNotBeSend = -7
 } SocketIOErrorCodes;
 
 
@@ -50,6 +52,10 @@ typedef enum {
 - (void) socketIO:(SocketIO *)socket didReceiveEvent:(SocketIOPacket *)packet;
 - (void) socketIO:(SocketIO *)socket didSendMessage:(SocketIOPacket *)packet;
 - (void) socketIO:(SocketIO *)socket onError:(NSError *)error;
+
+// TODO: deprecated -> to be removed
+- (void) socketIO:(SocketIO *)socket failedToConnectWithError:(NSError *)error __attribute__((deprecated));
+- (void) socketIOHandshakeFailed:(SocketIO *)socket __attribute__((deprecated));
 @end
 
 
@@ -68,8 +74,6 @@ typedef enum {
     BOOL _isConnected;
     BOOL _isConnecting;
     BOOL _useSecure;
-    
-    NSArray *_cookies;
     
     NSURLConnection *_handshake;
     
@@ -95,17 +99,17 @@ typedef enum {
 @property (nonatomic, readonly) NSString *sid;
 @property (nonatomic, readonly) NSTimeInterval heartbeatTimeout;
 @property (nonatomic) BOOL useSecure;
-@property (nonatomic) NSArray *cookies;
 @property (nonatomic, readonly) BOOL isConnected, isConnecting;
 @property (nonatomic, weak) id<SocketIODelegate> delegate;
 @property (nonatomic) BOOL returnAllDataFromAck;
 
 - (id) initWithDelegate:(id<SocketIODelegate>)delegate;
 - (void) connectToHost:(NSString *)host onPort:(NSInteger)port;
+- (void) connectToHost:(NSString *)host onPort:(NSInteger)port withToken:(NSString *)token;
 - (void) connectToHost:(NSString *)host onPort:(NSInteger)port withParams:(NSDictionary *)params;
 - (void) connectToHost:(NSString *)host onPort:(NSInteger)port withParams:(NSDictionary *)params withNamespace:(NSString *)endpoint;
 - (void) connectToHost:(NSString *)host onPort:(NSInteger)port withParams:(NSDictionary *)params withNamespace:(NSString *)endpoint withConnectionTimeout: (NSTimeInterval) connectionTimeout;
-
+- (void) connectToHost:(NSString *)host onPort:(NSInteger)port withParams:(NSDictionary *)params withNamespace:(NSString *)endpoint withConnectionTimeout: (NSTimeInterval) connectionTimeout andToken:(NSString *)messageToken;
 - (void) disconnect;
 - (void) disconnectForced;
 
