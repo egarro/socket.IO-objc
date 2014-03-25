@@ -99,7 +99,7 @@ NSString* const SocketIOException = @"SocketIOException";
     [self connectToHost:host onPort:port withParams:nil withNamespace:@"" withConnectionTimeout:defaultConnectionTimeout];
 }
 
-- (void) connectToHost:(NSString *)host onPort:(NSInteger)port withToken:(NSString *)token] {
+- (void) connectToHost:(NSString *)host onPort:(NSInteger)port withToken:(NSString *)token {
     [self connectToHost:host onPort:port withParams:nil withNamespace:@"" withConnectionTimeout:defaultConnectionTimeout andToken:token];
 }
 
